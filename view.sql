@@ -16,7 +16,7 @@ SET time_zone = "+00:00";
 -- Structure for view `catalog`
 --
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `catalog` AS select `p`.`product_id` AS `product_id`,`p`.`model` AS `model`,`p`.`sku` AS `sku`,`p`.`upc` AS `upc`,`pd`.`description` AS `description`,`pd`.`tag` AS `tag`,`pd`.`name` AS `name`,`ad`.`name` AS `attributes` from (((`oc_product` `p` join `oc_product_description` `pd` on((`p`.`product_id` = `pd`.`product_id`))) join `oc_product_attribute` `pa` on((`p`.`product_id` = `pa`.`product_id`))) join `oc_attribute_description` `ad` on((`ad`.`attribute_id` = `pa`.`attribute_id`)));
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `catalog` AS select `p`.`product_id` AS `product_id`,`p`.`model` AS `model`,`p`.`sku` AS `sku`,`p`.`upc` AS `upc`,`pd`.`description` AS `description`,`pd`.`tag` AS `tag`,`pd`.`name` AS `name`,`ad`.`name` AS `attributes` from (((`oc_product` `p` join `oc_product_description` `pd` on((`p`.`product_id` = `pd`.`product_id`))) left join `oc_product_attribute` `pa` on((`p`.`product_id` = `pa`.`product_id`))) left join `oc_attribute_description` `ad` on((`ad`.`attribute_id` = `pa`.`attribute_id`)));
 
 --
 -- VIEW  `catalog`
