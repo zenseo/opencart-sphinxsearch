@@ -26,7 +26,7 @@ public function getTotalProducts(array $data = array()) {
     
 }
 
-# OR Without Controller Patch
+# Without Controller Patch
 
 public function getProducts(array $data = array()) {
 
@@ -57,6 +57,8 @@ public function getProducts(array $data = array()) {
 
               if (count($sphinx_product_ids)) {
                   $sql .= " AND p.product_id IN (" . implode(',', $sphinx_product_ids) . ")";
+              } else {
+                  $sql .= " AND p.product_id = 0";
               }
           }
     
@@ -93,6 +95,8 @@ public function getTotalProducts(array $data = array()) {
 
               if (count($sphinx_product_ids)) {
                   $sql .= " AND p.product_id IN (" . implode(',', $sphinx_product_ids) . ")";
+              } else {
+                  $sql .= " AND p.product_id = 0";
               }
           }
     
