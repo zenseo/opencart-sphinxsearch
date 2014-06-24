@@ -44,9 +44,12 @@ public function getProducts(array $data = array()) {
                   $search = $data['filter_name'];
               }
 
-              $search = $this->sphinx->EscapeString($search);
+              $search = trim($this->sphinx->EscapeString($search));
 
-              $search = "({$search} | *{$search})*";
+              $to_transliteration = $this->_transliteration($search, 'to');
+              $from_transliteration = $this->_transliteration($search, 'from');
+
+              $search = "({$search} | *{$search}* | {$to_transliteration} | *{$to_transliteration}* | {$from_transliteration} | *{$from_transliteration}*)";
               $sphinx_result = $this->sphinx->Query($search);
 
               if ($sphinx_result !== false && !empty($sphinx_result['matches'])) {
@@ -82,9 +85,12 @@ public function getTotalProducts(array $data = array()) {
                   $search = $data['filter_name'];
               }
 
-              $search = $this->sphinx->EscapeString($search);
+              $search = trim($this->sphinx->EscapeString($search));
 
-              $search = "({$search} | *{$search})*";
+              $to_transliteration = $this->_transliteration($search, 'to');
+              $from_transliteration = $this->_transliteration($search, 'from');
+
+              $search = "({$search} | *{$search}* | {$to_transliteration} | *{$to_transliteration}* | {$from_transliteration} | *{$from_transliteration}*)";
               $sphinx_result = $this->sphinx->Query($search);
 
               if ($sphinx_result !== false && !empty($sphinx_result['matches'])) {
@@ -101,5 +107,70 @@ public function getTotalProducts(array $data = array()) {
           }
     
     // ...
+    
+    
+    private function _transliteration($string, $stream = 'to') {
+
+        $converter = array(
+
+            'а' => 'a',   'б' => 'b',   'в' => 'v',
+
+            'г' => 'g',   'д' => 'd',   'е' => 'e',
+
+            'ё' => 'e',   'ж' => 'zh',  'з' => 'z',
+
+            'и' => 'i',   'й' => 'y',   'к' => 'k',
+
+            'л' => 'l',   'м' => 'm',   'н' => 'n',
+
+            'о' => 'o',   'п' => 'p',   'р' => 'r',
+
+            'с' => 's',   'т' => 't',   'у' => 'u',
+
+            'ф' => 'f',   'х' => 'h',   'ц' => 'c',
+
+            'ч' => 'ch',  'ш' => 'sh',  'щ' => 'sch',
+
+            'ь' => '\'',  'ы' => 'y',   'ъ' => '\'',
+
+            'э' => 'e',   'ю' => 'yu',  'я' => 'ya',
+
+            'і' => 'i',   'ї' => 'yi',  'ґ' => 'g',
+
+
+
+            'А' => 'A',   'Б' => 'B',   'В' => 'V',
+
+            'Г' => 'G',   'Д' => 'D',   'Е' => 'E',
+
+            'Ё' => 'E',   'Ж' => 'Zh',  'З' => 'Z',
+
+            'И' => 'I',   'Й' => 'Y',   'К' => 'K',
+
+            'Л' => 'L',   'М' => 'M',   'Н' => 'N',
+
+            'О' => 'O',   'П' => 'P',   'Р' => 'R',
+
+            'С' => 'S',   'Т' => 'T',   'У' => 'U',
+
+            'Ф' => 'F',   'Х' => 'H',   'Ц' => 'C',
+
+            'Ч' => 'Ch',  'Ш' => 'Sh',  'Щ' => 'Sch',
+
+            'Ь' => '\'',  'Ы' => 'Y',   'Ъ' => '\'',
+
+            'Э' => 'E',   'Ю' => 'Yu',  'Я' => 'Ya',
+
+            'І' => 'I',   'Ї' => 'Yi',  'Ґ' => 'G',
+
+        );
+
+        if ($stream == 'to') {
+            return strtr($string, $converter);
+        } else {
+            return strtr($string, array_flip($converter));
+        }
+
+    }
     
 }
